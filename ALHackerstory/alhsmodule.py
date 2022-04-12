@@ -96,17 +96,22 @@ def fast_sell(ox, oy):
 
 def detect_gm(ox, oy):
     if pag.locateOnScreen(path+'GM.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'GM1.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None:
+            or pag.locateOnScreen(path+'GM1.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None\
+            or pag.locateOnScreen(path+'GM2.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None:
         return True
     else:
         return False
 
 
 def detect_player(ox, oy):
-    if pag.locateOnScreen(path+'defame.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'defame1.png', region=(ox + 255, oy + 180, 240, 120),
+    if pag.locateOnScreen(path+'defame.png',
+                          region=(ox + 255, oy + 180, 240, 120),
+                          confidence=0.7) is not None \
+            or pag.locateOnScreen(path+'defame1.png',
+                                  region=(ox + 255, oy + 180, 240, 120),
                                   confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'defame2.png', region=(ox + 255, oy + 180, 240, 120),
+            or pag.locateOnScreen(path+'defame2.png',
+                                  region=(ox + 255, oy + 180, 240, 120),
                                   confidence=0.7) is not None:
         return True
     else:
@@ -140,16 +145,16 @@ def start_bot(window_left_coord_x, window_top_coord_y):
 
 
 def stop_bot(ox, oy):
-    imgend = pag.screenshot(region=(ox, oy, 700, 425))
-    imgend.save(path+'screenshot.png')
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
 
 
-# Fonction de recuperation de photos (peux mieux faire)
+"""
+# Fonction de recuperation de photos (ne devrait plus servir)
 def gm_photoshoot(ox, oy, i):
-    sleep(.1)
+    sleep(.1*i)
     img = pag.screenshot(region=(ox + 255, oy + 180, 240, 120))
     img.save(path+'screen{}.png'.format(i))
     i += 1
     return i
+"""
