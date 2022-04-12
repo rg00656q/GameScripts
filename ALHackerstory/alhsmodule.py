@@ -4,7 +4,7 @@ from time import sleep
 
 tess.pytesseract.tesseract_cmd = r'C:\Users\guill\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 
-path = "AHL_images\\"
+path = "ALH_images\\"
 
 # Game screens
 wx, wy = (700, 425)  # fenetre de jeu
