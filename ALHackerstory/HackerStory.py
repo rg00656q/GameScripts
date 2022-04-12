@@ -27,11 +27,12 @@ To Do:
 import alhsmodule as alhs
 import keyboard
 
+i = 0
 ox, oy = alhs.locate_game()
-
-alhs.start_bot(ox, oy)
-while keyboard.is_pressed('q') == False:
+alhs.start_bot(window_left_coord_x=ox, window_top_coord_y=oy)
+while not keyboard.is_pressed('q'):
     if alhs.detect_gm(ox, oy):
+        i = alhs.gm_photoshoot(ox, oy, i)
         alhs.dodge_gm(ox, oy)
         print("Woop woop!")
         print("Po-po eluded")
@@ -42,4 +43,3 @@ while keyboard.is_pressed('q') == False:
         alhs.fast_sell(ox, oy)
         print("Done!")
 alhs.stop_bot(ox, oy)
-

@@ -1,11 +1,12 @@
-from PIL import Image
-import pytesseract as tess
-tess.pytesseract.tesseract_cmd = r'C:\Users\guill\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
 import pyautogui as pag
-import time
+import pytesseract as tess
+from time import sleep
+
+tess.pytesseract.tesseract_cmd = r'C:\Users\guill\AppData\Local\Programs\Tesseract-OCR\tesseract.exe'
+
+path = "AHL_images\\"
 
 # Game screens
-decalage = 0
 wx, wy = (700, 425)  # fenetre de jeu
 
 """ Cash Shop buttons list """
@@ -36,18 +37,15 @@ Enfin a tout moment appuier sur q pour arreter le bot
 
 
 def locate_game():
-    if pag.locateOnScreen('ALH_images\CS_UI.png', confidence=0.7) != None:
-        left, top, width, height = pag.locateOnScreen('ALH_images\CS_UI.png', confidence=0.7)
-        tuple = left, top
-        return tuple
-    elif pag.locateOnScreen('ALH_images\FM_UI.png', confidence=0.7) != None:
-        left, top, width, height = pag.locateOnScreen('ALH_images\FM_UI.png', confidence=0.7)
-        tuple = left, top
-        return tuple
-    elif pag.locateOnScreen('ALH_images\Game_UI.png', confidence=0.6) != None:
-        left, top, width, height = pag.locateOnScreen('ALH_images\Game_UI.png', confidence=0.7)
-        tuple = left, top
-        return tuple
+    if pag.locateOnScreen(path+'CS_UI.png', confidence=0.8) is not None:
+        left, top, width, height = pag.locateOnScreen(path+'CS_UI.png', confidence=0.8)
+        return left, top
+    elif pag.locateOnScreen(path+'FM_UI.png', confidence=0.8) is not None:
+        left, top, width, height = pag.locateOnScreen(path+'FM_UI.png', confidence=0.8)
+        return left, top
+    elif pag.locateOnScreen(path+'Game_UI.png', confidence=0.8) is not None:
+        left, top, width, height = pag.locateOnScreen(path+'Game_UI.png', confidence=0.8)
+        return left, top
     else:
         usage()
         exit(0)
@@ -55,23 +53,28 @@ def locate_game():
 
 """ Boucle de ventes multiples (pour vendre les 9 slots) """
 """ Vente rapide """
+
+
 def fast_sell(ox, oy):
     print("going to Free Market, to sell items")
-    pag.moveTo(ox+fm_x, oy+fm_y+decalage)
+    pag.moveTo(ox + fm_x, oy + fm_y)
     pag.leftClick()
-    pag.moveTo(ox+selld_x, oy+selld_y+decalage)
+    pag.moveTo(ox + selld_x, oy + selld_y)
     pag.leftClick()
     for i in range(9):
-        pag.moveTo(ox+ok_x, oy+ok_y+decalage)
+        pag.moveTo(ox + ok_x, oy + ok_y)
         pag.leftClick()
-        time.sleep(0.2)
-        pag.moveTo(ox+yes_x, oy+yes_y+decalage)
+        sleep(0.2)
+        pag.moveTo(ox + yes_x, oy + yes_y)
         pag.leftClick()
-        time.sleep(0.2)
-    pag.moveTo(ox+exit_x, oy+exit_y+decalage)
+        sleep(0.2)
+    pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
 
+
 """ Vente Efficace (non fini)"""
+
+
 # for i in range(9):
 #     pag.moveTo(ok_x, ok_y)
 #     pag.leftClick()
@@ -92,54 +95,61 @@ def fast_sell(ox, oy):
 
 
 def detect_gm(ox, oy):
-    if pag.locateOnScreen('ALH_images\GM.png', region=(ox+255, oy+180+decalage, 240, 120), confidence=0.7) != None:
-    # or pag.locateOnScreen('ALH_images\defame1.png', region=(ox+255, oy+180, 240, 120), confidence=0.7) != None \
-    # or pag.locateOnScreen('ALH_images\defame2.png', region=(ox+255, oy+180, 240, 120), confidence=0.7) != None \
-    # or pag.locateOnScreen('ALH_images\defame3.png', region=(ox+255, oy+180, 240, 120), confidence=0.7) != None:
+    if pag.locateOnScreen(path+'GM.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None \
+            or pag.locateOnScreen(path+'GM1.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None:
         return True
     else:
         return False
 
 
 def detect_player(ox, oy):
-    if pag.locateOnScreen('ALH_images\defame.png', region=(ox+255, oy+180+decalage, 240, 120), confidence=0.7) != None \
-    or pag.locateOnScreen('ALH_images\defame1.png', region=(ox+255, oy+180+decalage, 240, 120), confidence=0.7) != None \
-    or pag.locateOnScreen('ALH_images\defame2.png', region=(ox+255, oy+180+decalage, 240, 120), confidence=0.7) != None:
-        # or pag.locateOnScreen('ALH_images\defame3.png', region=(ox+255, oy+180, 240, 120), confidence=0.7) != None:
-        # Image manquante
+    if pag.locateOnScreen(path+'defame.png', region=(ox + 255, oy + 180, 240, 120), confidence=0.7) is not None \
+            or pag.locateOnScreen(path+'defame1.png', region=(ox + 255, oy + 180, 240, 120),
+                                  confidence=0.7) is not None \
+            or pag.locateOnScreen(path+'defame2.png', region=(ox + 255, oy + 180, 240, 120),
+                                  confidence=0.7) is not None:
         return True
     else:
         return False
 
 
 def detect_full_inventory(ox, oy):
-    if pag.locateOnScreen('ALH_images\slot9.png', region=(ox+420, oy+370+decalage, 68, 63)) == None:
+    if pag.locateOnScreen(path+'slot9.png', region=(ox + 420, oy + 370, 68, 63)) is None:
         return True
     else:
         return False
 
 
 def dodge_gm(ox, oy):
-        pag.moveTo(ox+cs_x, oy+cs_y+decalage)
-        pag.leftClick()
-        pag.moveTo(ox+exit_x, oy+exit_y+decalage)
-        pag.leftClick()
+    pag.moveTo(ox + cs_x, oy + cs_y)
+    pag.leftClick()
+    pag.moveTo(ox + exit_x, oy + exit_y)
+    pag.leftClick()
 
 
 def dodge_player(ox, oy):
-        pag.moveTo(ox+cs_x, oy+cs_y+decalage)
-        pag.leftClick()
-        pag.moveTo(ox+exit_x, oy+exit_y+decalage)
-        pag.leftClick()
+    pag.moveTo(ox + cs_x, oy + cs_y)
+    pag.leftClick()
+    pag.moveTo(ox + exit_x, oy + exit_y)
+    pag.leftClick()
 
 
-def start_bot(ox, oy):
-    pag.moveTo(ox+exit_x, oy+exit_y+decalage)
+def start_bot(window_left_coord_x, window_top_coord_y):
+    pag.moveTo(window_left_coord_x + exit_x, window_top_coord_y + exit_y)
     pag.leftClick()
 
 
 def stop_bot(ox, oy):
-    imgend = pag.screenshot(region=(ox, oy+decalage, 700, 425))
-    imgend.save('ALH_images\screenshot.png')
-    pag.moveTo(ox+cs_x, oy+cs_y+decalage)
+    imgend = pag.screenshot(region=(ox, oy, 700, 425))
+    imgend.save(path+'screenshot.png')
+    pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
+
+
+# Fonction de recuperation de photos (peux mieux faire)
+def gm_photoshoot(ox, oy, i):
+    sleep(.1)
+    img = pag.screenshot(region=(ox + 255, oy + 180, 240, 120))
+    img.save(path+'screen{}.png'.format(i))
+    i += 1
+    return i
