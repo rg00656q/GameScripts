@@ -5,8 +5,6 @@ import alhsmodule as alhs
 import keyboard
 
 ox, oy = alhs.locate_game()
-gm_nb = 0
-hrp_nb = 0
 alhs.start_bot(game_window_left_coord_x=ox, game_window_top_coord_y=oy)
 while not keyboard.is_pressed('q'):
     if alhs.omni_detect(ox, oy):

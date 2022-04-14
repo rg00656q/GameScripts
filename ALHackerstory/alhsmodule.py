@@ -8,7 +8,8 @@ tess.pytesseract.tesseract_cmd = r'C:\Users\guill\AppData\Local\Programs\Tessera
 path = "ALH_images\\"
 
 # Game screens
-wx, wy = (700, 425)  # fenetre de jeu
+wx, wy = (700, 425)  # fenêtre de jeu
+pix_detect_x, pix_detect_y = (470, 246)  # Coordonnées du point d'apparition des ennemis
 
 """ Cash Shop buttons list """
 cs_x, cs_y = (610, 290)  # Cash Shop button (to use Cash)
@@ -23,7 +24,7 @@ selld_x, selld_y = (300, 358)  # Sell Drops button
 fame_x, fame_y = (385, 358)  # Fame button
 cash_x, cash_y = (470, 358)  # Cash button (to buy Cash)
 
-""" Coordonnees des bouttons de vente """
+""" Coordonnées des boutons de vente """
 ok_x, ok_y = (675, 200)
 yes_x, yes_y = (585, 330)
 no_x, no_y = (645, 330)
@@ -32,8 +33,8 @@ no_x, no_y = (645, 330)
 def usage():
     print("""
 Le bot se lance avec Python
-La fenetre de jeu ne doit pas etre cachee, deplacee,ou minimisee
-Enfin a tout moment appuier sur q pour arreter le bot
+La fenêtre de jeu ne doit pas être cachée, déplacée,ou minimisée
+Enfin a tout moment appuyer sur q pour arrêter le bot
     """)
 
 
@@ -99,6 +100,7 @@ def efficient_sell(ox, oy):
             pag.leftClick()
             current_price = gather_price(ox, oy, 'current')
             sleep(0.1)
+
         pag.moveTo(ox + yes_x, oy + yes_y)
         pag.leftClick()
         print(f'Item price {avg_price} sold for {current_price}')
@@ -108,9 +110,7 @@ def efficient_sell(ox, oy):
 
 
 def omni_detect(ox, oy):
-    pix_detect_x, pix_detect_y = (ox + 470, oy + 246)
-
-    if pag.pixel(int(pix_detect_x), int(pix_detect_y))[0] != 255:
+    if pag.pixel(int(ox + pix_detect_x), int(oy + pix_detect_y))[0] != 255:
         return True
     else:
         return False
@@ -138,66 +138,3 @@ def start_bot(game_window_left_coord_x, game_window_top_coord_y):
 def stop_bot(ox, oy):
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
-
-
-# Deprecated functions and the reasons
-"""
-# inefficient for the trade exp, and meso wise
-def fast_sell(ox, oy):
-    print("going to Free Market, to sell items")
-    pag.moveTo(ox + fm_x, oy + fm_y)
-    pag.leftClick()
-    pag.moveTo(ox + selld_x, oy + selld_y)
-    pag.leftClick()
-    for i in range(9):
-        pag.moveTo(ox + ok_x, oy + ok_y)
-        pag.leftClick()
-        sleep(0.2)
-        pag.moveTo(ox + yes_x, oy + yes_y)
-        pag.leftClick()
-        sleep(0.2)
-    pag.moveTo(ox + exit_x, oy + exit_y)
-    pag.leftClick()
-
-# Pixel checking is way faster
-def detect_gm(ox, oy):
-    if pag.locateOnScreen(path+'GM.png', region=(ox + 355, oy + 170, 170, 130), confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'GM1.png', region=(ox + 355, oy + 170, 170, 130), confidence=0.7) is not None\
-            or pag.locateOnScreen(path+'GM2.png', region=(ox + 355, oy + 170, 170, 130), confidence=0.7) is not None:
-        return True
-    else:
-        return False
-
-
-def detect_player(ox, oy):
-    if pag.locateOnScreen(path+'defame.png',
-                          region=(ox + 355, oy + 170, 170, 130),
-                          confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'defame1.png',
-                                  region=(ox + 355, oy + 170, 170, 130),
-                                  confidence=0.7) is not None \
-            or pag.locateOnScreen(path+'defame2.png',
-                                  region=(ox + 355, oy + 170, 170, 130),
-                                  confidence=0.7) is not None:
-        return True
-    else:
-        return False
-
-
-def dodge_gm(ox, oy, gm_encounter_number):
-    pag.moveTo(ox + cs_x, oy + cs_y)
-    pag.leftClick()
-    gm_encounter_number += 1
-    pag.moveTo(ox + exit_x, oy + exit_y)
-    pag.leftClick()
-    return gm_encounter_number
-
-
-def dodge_player(ox, oy, highrank_player_encounter_number):
-    pag.moveTo(ox + cs_x, oy + cs_y)
-    pag.leftClick()
-    highrank_player_encounter_number += 1
-    pag.moveTo(ox + exit_x, oy + exit_y)
-    pag.leftClick()
-    return highrank_player_encounter_number
-"""
