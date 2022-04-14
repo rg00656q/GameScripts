@@ -21,13 +21,25 @@ Il s'agit d'un bot qui jouera a la place du joueur et ce tant qu'on ne le désac
 
 Il fonctionne pour la detection du defamer et celle du GM (une défaite est cependant possible).
 
-La fonctionnalité pour la vente rapide est terminée.
+Il fonctionne aussi pour la vente des objets, mais une erreur est encore envisageable.
 
 <mark style="background-color: #FF0000">Appuyez sur 'q' a tout moment pour arrêter le programme</mark>
 
 ##To Do:
-    
-    Faire fonction changement couleur pixel
-    Refaire la fenetre de detection gm/defamer
-    changer d'equipement par palier?
-    faire code modulable en fonction des touches du clavier?
+
+    Programming the late game
+        - price checking (done)(?)
+        - Buff enabler
+            - buy cash
+                - check meso -> buy lower
+                - Twin coupon (1 000 coin) + teddy cvs (5 000 coin)
+                    - Check expiration
+                - potions
+                    - Accuracy -> Amorian Basket (180 000 coin)
+                    - Damage -> Onyx Apple (30 000 000 coin ... very late game lol)
+        
+    Detection based on pixel color change
+        - faster than checking 6 pictures
+        - can be done for everything so overall better
+
+    automated equipment progression
