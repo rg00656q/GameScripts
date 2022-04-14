@@ -5,16 +5,16 @@ import alhsmodule as alhs
 import keyboard
 
 ox, oy = alhs.locate_game()
-alhs.start_bot(window_left_coord_x=ox, window_top_coord_y=oy)
+gm_nb = 0
+hrp_nb = 0
+alhs.start_bot(game_window_left_coord_x=ox, game_window_top_coord_y=oy)
 while not keyboard.is_pressed('q'):
     if alhs.detect_gm(ox, oy):
-        alhs.dodge_gm(ox, oy)
-        print("Woop woop!")
-        print("Po-po eluded")
+        gm_nb = alhs.dodge_gm(ox, oy, gm_encounter_number=gm_nb)
+        print(f'I dodged {gm_nb} GMs')
     elif alhs.detect_player(ox, oy):
-        alhs.dodge_player(ox, oy)
-        print("dodged a player")
+        hrp_nb = alhs.dodge_player(ox, oy, highrank_player_encounter_number=hrp_nb)
+        print(f'I dodged {hrp_nb} players')
     elif alhs.detect_full_inventory(ox, oy):
-        alhs.fast_sell(ox, oy)
-        print("Done!")
+        alhs.efficient_sell(ox, oy)
 alhs.stop_bot(ox, oy)

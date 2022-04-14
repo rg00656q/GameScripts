@@ -1,3 +1,4 @@
+from PIL import Image, ImageOps
 import pyautogui as pag
 import pytesseract as tess
 from time import sleep
@@ -75,23 +76,74 @@ def fast_sell(ox, oy):
 """ Vente Efficace (non fini)"""
 
 
-# for i in range(9):
-#     pag.moveTo(ok_x, ok_y)
-#     pag.leftClick()
-#     time.sleep(1)
-#     img_avg_price = pag.screenshot(region =(580, 247, 60, 20))
-#     img_current_price = pag.screenshot(region =(580, 286, 60, 20))
-#     avg_price = int(tess.image_to_string(img_avg_price.resize((240, 80))))
-#     current_price = int(tess.image_to_string(img_current_price.resize((240, 80))))
-#     while current_price <= avg_price :
-#         pag.moveTo(no_x, no_y)
-#         pag.leftClick()
-#         img_avg_price = pag.screenshot(region =(580, 247, 60, 20))
-#         img_current_price = pag.screenshot(region =(580, 286, 60, 20))
-#         avg_price = int(tess.image_to_string(img_avg_price.resize((240, 80))))
-#         current_price = int(tess.image_to_string(img_current_price.resize((240, 80))))
-#     pag.moveTo(yes_x, yes_y)
-#     pag.leftClick()
+def efficient_sell(ox, oy):
+    print("going to Free Market, to sell items")
+    pag.moveTo(ox + fm_x, oy + fm_y)
+    pag.leftClick()
+    pag.moveTo(ox + selld_x, oy + selld_y)
+    pag.leftClick()
+    for i in range(9):
+        pag.moveTo(ox + ok_x, oy + ok_y)
+        pag.leftClick()
+
+        # Recuperation et conversion de text en int du prix moyen
+        sc = pag.screenshot(region=(ox + 540, oy + 225, 140, 40))
+        sc.save(path+'avgp.png')
+        img_avg_price = Image.open(path+'avgp.png')
+        gray = ImageOps.grayscale(ImageOps.invert(img_avg_price))  # inverting colors + grayscale for precision
+        text_avg_price = tess.image_to_string(gray)[14:-1]
+        array_avg_price = text_avg_price.split(',')
+        avg_price_str = '0.'  # conversion to float first to evade a TypeError
+        for element in array_avg_price:
+            avg_price_str += element
+        avg_price = float(avg_price_str)
+        avg_price *= pow(1000, text_avg_price.count(','))
+        avg_price *= pow(10, len(array_avg_price[0]))
+        avg_price = int(round(avg_price))
+
+        # Recuperation et conversion de text en int du prix propose
+        sc = pag.screenshot(region=(ox + 540, oy + 265, 140, 40))
+        sc.save(path+'currp.png')
+        img_current_price = Image.open(path+'currp.png')
+        gray = ImageOps.grayscale(ImageOps.invert(img_current_price))
+        text_current_price = tess.image_to_string(gray)[21:-1]
+        array_current_price = text_current_price.split(',')
+        current_price_str = '0.'
+        for element in array_current_price:
+            current_price_str += element
+        current_price = float(current_price_str)
+        current_price *= pow(1000, text_current_price.count(','))
+        current_price *= pow(10, len(array_current_price[0]))
+        current_price = int(round(current_price))
+
+        sleep(0.1)
+
+        # Comparaison des prix, et maj du prix propose
+        while current_price <= avg_price:
+            pag.moveTo(ox + no_x, oy + no_y)
+            pag.leftClick()
+            sc = pag.screenshot(region=(ox + 540, oy + 265, 140, 40))
+            sc.save(path+'currp.png')
+            img_current_price = Image.open(path+'currp.png')
+            gray = ImageOps.grayscale(ImageOps.invert(img_current_price))
+            text_current_price = tess.image_to_string(gray)[21:-1]
+            array_current_price = text_current_price.split(',')
+            current_price_str = '0.'
+            for element in array_current_price:
+                current_price_str += element
+            current_price = float(current_price_str)
+            current_price *= pow(1000, text_current_price.count(','))
+            current_price *= pow(10, len(array_current_price[0]))
+            current_price = int(round(current_price))
+            sleep(0.1)
+        pag.moveTo(ox + yes_x, oy + yes_y)
+        pag.leftClick()
+        print(f'Item price {avg_price} sold for {current_price}')
+        print(f'We saved {current_price-avg_price}')
+        img_avg_price.close()
+        img_current_price.close()
+    pag.moveTo(ox + exit_x, oy + exit_y)
+    pag.leftClick()
 
 
 def detect_gm(ox, oy):
@@ -119,42 +171,35 @@ def detect_player(ox, oy):
 
 
 def detect_full_inventory(ox, oy):
-    if pag.locateOnScreen(path+'slot9.png', region=(ox + 420, oy + 370, 68, 63)) is None:
+    if pag.locateOnScreen(path+'slot9.png', region=(ox + 420, oy + 370, 68, 68)) is None:
         return True
     else:
         return False
 
 
-def dodge_gm(ox, oy):
+def dodge_gm(ox, oy, gm_encounter_number):
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
+    gm_encounter_number += 1
     pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
+    return gm_encounter_number
 
 
-def dodge_player(ox, oy):
+def dodge_player(ox, oy, highrank_player_encounter_number):
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
+    highrank_player_encounter_number += 1
     pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
+    return highrank_player_encounter_number
 
 
-def start_bot(window_left_coord_x, window_top_coord_y):
-    pag.moveTo(window_left_coord_x + exit_x, window_top_coord_y + exit_y)
+def start_bot(game_window_left_coord_x, game_window_top_coord_y):
+    pag.moveTo(game_window_left_coord_x + exit_x, game_window_top_coord_y + exit_y)
     pag.leftClick()
 
 
 def stop_bot(ox, oy):
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
-
-
-"""
-# Fonction de recuperation de photos (ne devrait plus servir)
-def gm_photoshoot(ox, oy, i):
-    sleep(.1*i)
-    img = pag.screenshot(region=(ox + 255, oy + 180, 240, 120))
-    img.save(path+'screen{}.png'.format(i))
-    i += 1
-    return i
-"""

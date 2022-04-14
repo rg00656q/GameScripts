@@ -11,7 +11,8 @@ Il faut installer au préalable <mark style="background-color: #FFFF00">supernov
 
 Passez le lien suivant dans votre navigateur pour lancer le jeu flash :
 
-<mark style="background-color: #FFFF00">url</mark> : [jeu](supernova://play/?swfurl=http://chat.kongregate.com/gamez/0003/2079/live/ayumilove_hackerstory2_secure.swf?kongregate_game_version=1230090250)
+<mark style="background-color: #FFFF00">url</mark> : 
+<mark style="background-color: red">supernova://play/?swfurl=http://chat.kongregate.com/gamez/0003/2079/live/ayumilove_hackerstory2_secure.swf?kongregate_game_version=1230090250)</mark>
 
 Les images du jeu viennent de MapleStory, un jeu de NEXON.
 
@@ -25,8 +26,8 @@ La fonctionnalité pour la vente rapide est terminée.
 <mark style="background-color: #FF0000">Appuyez sur 'q' a tout moment pour arrêter le programme</mark>
 
 ##To Do:
+    
+    Faire fonction changement couleur pixel
     Refaire la fenetre de detection gm/defamer
-    Coder vente efficace
-    compteurs dans le module?
     changer d'equipement par palier?
     faire code modulable en fonction des touches du clavier?
