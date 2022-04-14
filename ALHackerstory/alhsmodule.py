@@ -10,6 +10,7 @@ path = "ALH_images\\"
 # Game screens
 wx, wy = (700, 425)  # fenêtre de jeu
 pix_detect_x, pix_detect_y = (470, 246)  # Coordonnées du point d'apparition des ennemis
+accuracy_ico_x, accuracy_ico_y = (38, 132)
 
 """ Cash Shop buttons list """
 cs_x, cs_y = (610, 290)  # Cash Shop button (to use Cash)
@@ -17,6 +18,10 @@ pet_x, pet_y = (60, 358)  # Pet and Hack buttons
 etc_x, etc_y = (140, 358)  # ETC and Scroll buttons
 npc_x, npc_y = (218, 358)  # NPC and Buy Equip buttons
 exit_x, exit_y = (620, 390)  # Exit button
+item_selector_x, item_selector_y = (580, 194)  # Menu defilant
+onyx_apple_x, onyx_apple_y = (580, 260)  # Option 3 du menu
+amorian_basket_x, amorian_basket_y = (580, 330)  # Option 6 du menu
+cs_yes_x, cs_yes_y = (610, 305)
 
 """ free market buttons list """
 fm_x, fm_y = (610, 250)  # Free Market button
@@ -56,33 +61,33 @@ def locate_game():
 """ Boucle de ventes multiples (pour vendre les 9 slots) """
 
 
+def text_to_int(text_price):
+    cleaning = ",!() @.\n"
+    for char in cleaning:
+        text_price = text_price.replace(char, '')
+    price = int(text_price)
+    return price
+
+
 def gather_price(ox, oy, price_type):
     if price_type == 'average':
         sc = pag.screenshot(region=(ox + 540, oy + 225, 140, 40))
         sc.save(path + 'price.png')
         img_price = Image.open(path + 'price.png')
         gray = ImageOps.grayscale(ImageOps.invert(img_price))  # inverting colors + grayscale for precision
-        text_price = tess.image_to_string(gray)[14:-1]
+        text_price = tess.image_to_string(gray)[14:]
     else:
         sc = pag.screenshot(region=(ox + 540, oy + 265, 140, 40))
         sc.save(path + 'price.png')
         img_price = Image.open(path + 'price.png')
         gray = ImageOps.grayscale(ImageOps.invert(img_price))
-        text_price = tess.image_to_string(gray)[21:-1]
-
-    array_price = text_price.split(',')
-    price_str = '0.'  # conversion to float first to evade a TypeError
-    for element in array_price:
-        price_str += element.strip('\n')
-    price = float(price_str)
-    price *= pow(1000, text_price.count(','))
-    price *= pow(10, len(array_price[0].strip('\n')))
-    price = int(round(price))
+        text_price = tess.image_to_string(gray)[20:]
+    price = text_to_int(text_price)
     img_price.close()
     return price
 
 
-def efficient_sell(ox, oy):
+def efficient_sell(ox, oy, savings):
     print("going to Free Market, to sell items")
     pag.moveTo(ox + fm_x, oy + fm_y)
     pag.leftClick()
@@ -103,10 +108,10 @@ def efficient_sell(ox, oy):
 
         pag.moveTo(ox + yes_x, oy + yes_y)
         pag.leftClick()
-        print(f'Item price {avg_price} sold for {current_price}')
-        print(f'We saved {current_price - avg_price} mesos')
+        savings += current_price - avg_price
     pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
+    return savings
 
 
 def omni_detect(ox, oy):
@@ -116,11 +121,13 @@ def omni_detect(ox, oy):
         return False
 
 
-def dodge(ox, oy):
+def dodge(ox, oy, encounters):
     pag.moveTo(ox + cs_x, oy + cs_y)
     pag.leftClick()
+    encounters += 1
     pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
+    return encounters
 
 
 def detect_full_inventory(ox, oy):
@@ -137,4 +144,49 @@ def start_bot(game_window_left_coord_x, game_window_top_coord_y):
 
 def stop_bot(ox, oy):
     pag.moveTo(ox + cs_x, oy + cs_y)
+    pag.leftClick()
+
+
+def buy_cash(ox, oy, savings):
+    print("going to Free Market, to buy coins")
+    pag.moveTo(ox + fm_x, oy + fm_y)
+    pag.leftClick()
+    pag.moveTo(ox + cash_x, oy + cash_y)
+    pag.leftClick()
+    pag.moveTo(ox + item_selector_x, oy + item_selector_y)
+    pag.leftClick()
+    pag.moveTo(ox + amorian_basket_x, oy + amorian_basket_y)  # Pas le basket mais +100 000 cash
+    pag.leftClick()
+    pag.moveTo(ox + ok_x, oy + ok_y)
+    pag.leftClick()
+    img = pag.screenshot(region=(ox + 535, oy + 30, 140, 25))
+    img.save(path+'screenshot.png')
+    img = Image.open(path+'screenshot.png')
+    img = ImageOps.grayscale(ImageOps.invert(img))
+    text_money = tess.image_to_string(img)[7:]
+    money = text_to_int(text_money)
+    avg_price = gather_price(ox, oy, 'average')
+    while money >= avg_price:
+        current_price = gather_price(ox, oy, 'current')
+        while current_price >= avg_price:
+            pag.moveTo(ox + no_x, oy + no_y)
+            pag.leftClick()
+            current_price = gather_price(ox, oy, 'current')
+            sleep(0.2)
+        pag.moveTo(ox + yes_x, oy + yes_y)
+        pag.leftClick()
+        savings += (avg_price - current_price)
+
+        pag.moveTo(ox + ok_x, oy + ok_y)
+        pag.leftClick()
+        img = pag.screenshot(region=(ox + 535, oy + 30, 140, 20))
+        img.save(path+'screenshot.png')
+        img = Image.open(path+'screenshot.png')
+        img = ImageOps.grayscale(ImageOps.invert(img))
+        text_money = tess.image_to_string(img)[7:]
+        money = text_to_int(text_money)
+        avg_price = gather_price(ox, oy, 'average')
+        sleep(0.2)
+
+    pag.moveTo(ox + exit_x, oy + exit_y)
     pag.leftClick()
