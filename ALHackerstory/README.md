@@ -32,8 +32,7 @@ Il fonctionne aussi pour la vente des objets, mais une erreur est encore envisag
 
     Programming the late game
         - Buff enabler
-            - buy cash (redigee mais sors de boucle sans raisons)
-                - check meso -> buy lower
+            - buy cash (redigee mais sors parfois de boucle)
                 - Twin coupon (1 000 coin) + teddy cvs (5 000 coin)
                     - Check expiration
                 - potions  (coordinates are done, just to code it)
@@ -43,7 +42,7 @@ Il fonctionne aussi pour la vente des objets, mais une erreur est encore envisag
     Detection based on pixel color change
         + twin coupon on a grid makes it annoying, we have to check multiple colors
         + same for slot9, we have to check an other pixel depending of the item in it
-        - faster than checking 6 pictures
+        - faster than checking 10 pictures (3 for each person/group to verify)
         - can be done for everything so overall better
 
     automated equipment progression
