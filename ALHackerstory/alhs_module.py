@@ -24,14 +24,6 @@ def omni_detect():
         return False
 
 
-def dodge(encounters):
-    pag.moveTo(al.getglob_x() + al.cs_x, al.getglob_y() + al.cs_y)
-    pag.leftClick()
-    encounters += 1
-    al.click(al.exit_x, al.exit_y)
-    return encounters
-
-
 def detect_full_inventory():
     if pag.locateOnScreen(al.path + 'slot9.png', region=(al.getglob_x() + 420, al.getglob_y() + 370, 68, 68)) is None:
         return True
@@ -53,6 +45,14 @@ def detect_no_acc():
         return True
     else:
         return False
+
+
+def dodge(encounters):
+    pag.moveTo(al.getglob_x() + al.cs_x, al.getglob_y() + al.cs_y)
+    pag.leftClick()
+    encounters += 1
+    al.click(al.exit_x, al.exit_y)
+    return encounters
 
 
 def stop_bot():

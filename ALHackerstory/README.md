@@ -1,6 +1,6 @@
 # AyumiLove's Hackerstory V1 Bot
 ## Code ecrit par Guillaume Romero
-### Mis a jour le 14/04/2022
+### Mis a jour le 19/04/2022
 
 ### Installation
 Comme il s'agit d'un jeu flash, il faut installer au préalable <mark style="background-color: #FFFF00">supernova</mark>.
@@ -30,6 +30,11 @@ Il fonctionne aussi pour la vente des objets, mais une erreur est encore envisag
 
 ##To Do:
 
+    Too much informations to check will lead to not enought of time to pixel check
+        -> you may get banned because of the code being to slow
+            -> coding the checking only amorian basket
+                - not twin coupon
+    
     Programming the late game
         - Buff enabler
             - buy cash (redigee mais sors parfois de boucle)

@@ -10,8 +10,11 @@ exit_x, exit_y = (620, 390)  # Exit button
 def init_glob():
     global glob_x
     global glob_y
+    global toggle_twin_c
+    global toggle_late_g
     glob_x = 0
     glob_y = 0
+    toggle_late_g = False
 
 
 def getglob_x():
@@ -20,6 +23,10 @@ def getglob_x():
 
 def getglob_y():
     return glob_y
+
+
+def getInterruptor():
+    return toggle_late_g
 
 
 def usage():

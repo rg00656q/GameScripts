@@ -28,19 +28,37 @@ no_x, no_y = (645, 330)
 def gather_price(price_type):
     if price_type == 'average':
         sc = pag.screenshot(region=(al.getglob_x() + 540, al.getglob_y() + 225, 140, 40))
-        sc.save(al.path + 'price.png')
-        img_price = Image.open(al.path + 'price.png')
+        sc.save(al.path + 'screenshot.png')
+        img_price = Image.open(al.path + 'screenshot.png')
         gray = ImageOps.grayscale(ImageOps.invert(img_price))  # inverting colors + grayscale for precision
         text_price = tess.image_to_string(gray)[14:]
     else:
         sc = pag.screenshot(region=(al.getglob_x() + 540, al.getglob_y() + 265, 140, 40))
-        sc.save(al.path + 'price.png')
-        img_price = Image.open(al.path + 'price.png')
+        sc.save(al.path + 'screenshot.png')
+        img_price = Image.open(al.path + 'screenshot.png')
         gray = ImageOps.grayscale(ImageOps.invert(img_price))
         text_price = tess.image_to_string(gray)[20:]
     price = al.text_to_int(text_price)
     img_price.close()
     return price
+
+
+def getMoney(type):
+    if type == 'meso':
+        sc = pag.screenshot(region=(al.getglob_x() + 535, al.getglob_y() + 30, 140, 25))
+        sc.save(al.path + 'screenshot.png')
+        img_money = Image.open(al.path+'screenshot.png')
+        gray = ImageOps.grayscale(ImageOps.invert(img_money))
+        text_money = tess.image_to_string(gray)[7:]
+    else:
+        sc = pag.screenshot(region=(al.getglob_x() + 535, al.getglob_y() + 45, 140, 25))
+        sc.save(al.path + 'screenshot.png')
+        img_money = Image.open(al.path+'screenshot.png')
+        gray = ImageOps.grayscale(ImageOps.invert(img_money))
+        text_money = tess.image_to_string(gray)[7:]
+    money = al.text_to_int(text_money)
+    img_money.close()
+    return money
 
 
 def efficient_sell(savings):
@@ -72,12 +90,7 @@ def buy_cash(savings):
     al.click(amorian_basket_x, amorian_basket_y)
     al.click(ok_x, ok_y)
 
-    img = pag.screenshot(region=(al.getglob_x() + 535, al.getglob_y() + 30, 140, 25))
-    img.save(al.path+'price.png')
-    img = Image.open(al.path+'price.png')
-    img = ImageOps.grayscale(ImageOps.invert(img))
-    text_money = tess.image_to_string(img)[7:]
-    money = al.text_to_int(text_money)
+    money = getMoney('meso')
 
     avg_price = gather_price('average')
 
@@ -92,12 +105,7 @@ def buy_cash(savings):
 
         al.click(ok_x, ok_y)
 
-        img = pag.screenshot(region=(al.getglob_x() + 535, al.getglob_y() + 30, 140, 25))
-        img.save(al.path+'price.png')
-        img = Image.open(al.path+'price.png')
-        img = ImageOps.grayscale(ImageOps.invert(img))
-        text_money = tess.image_to_string(img)[7:]
-        money = al.text_to_int(text_money)
+        money = getMoney('meso')
 
         avg_price = gather_price('average')
         sleep(0.2)
@@ -108,6 +116,23 @@ def buy_cash(savings):
 def buy_twc():
     al.click(al.cs_x, al.cs_y)
     al.click(etc_x, etc_y)
+    al.click(ok_x, ok_y)
+    sleep(.1)
+    al.click(cs_yes_x, cs_yes_y)
+    al.click(al.exit_x, al.exit_y)
+
+
+def buy_buffs():
+    al.click(al.cs_x, al.cs_y)
+    al.click(npc_x, npc_y)
+    al.click(item_selector_x, item_selector_y)
+    al.click(onyx_apple_x, onyx_apple_y)
+    sleep(.1)
+    al.click(ok_x, ok_y)
+    al.click(cs_yes_x, cs_yes_y)
+    al.click(item_selector_x, item_selector_y)
+    al.click(amorian_basket_x, amorian_basket_y)
+    sleep(.1)
     al.click(ok_x, ok_y)
     al.click(cs_yes_x, cs_yes_y)
     al.click(al.exit_x, al.exit_y)
