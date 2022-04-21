@@ -24,8 +24,7 @@ yes_x, yes_y = (585, 330)
 no_x, no_y = (645, 330)
 
 
-
-def gather_price(price_type):
+def getprice(price_type):
     if price_type == 'average':
         sc = pag.screenshot(region=(al.getglob_x() + 540, al.getglob_y() + 225, 140, 40))
         sc.save(al.path + 'screenshot.png')
@@ -43,8 +42,8 @@ def gather_price(price_type):
     return price
 
 
-def getMoney(type):
-    if type == 'meso':
+def getmoney(money_type):
+    if money_type == 'meso':
         sc = pag.screenshot(region=(al.getglob_x() + 535, al.getglob_y() + 30, 140, 25))
         sc.save(al.path + 'screenshot.png')
         img_money = Image.open(al.path+'screenshot.png')
@@ -63,22 +62,28 @@ def getMoney(type):
 
 def efficient_sell(savings):
     print("going to Free Market, to sell items")
-    al.click(fm_x, fm_y)   # ?
+    al.click(fm_x, fm_y)
     al.click(selld_x, selld_y)
-    for i in range(9):
-        al.click(ok_x, ok_y)
-        avg_price = gather_price('average')
-        current_price = gather_price('current')
+    try:
+        for i in range(9):
+            al.click(ok_x, ok_y)
+            avg_price = getprice('average')
+            current_price = getprice('current')
 
-        # Comparaison des prix, et maj du prix propose
-        while current_price <= avg_price:
-            al.click(no_x, no_y)
-            current_price = gather_price('current')
-            sleep(0.1)
+            # Comparaison des prix, et maj du prix propose
+            while current_price <= avg_price:
+                al.click(no_x, no_y)
+                current_price = getprice('current')
+                if current_price == 0 and avg_price == 0:
+                    raise al.PictureError()
+                sleep(0.1)
 
-        al.click(yes_x, yes_y)
-        savings += current_price - avg_price
-    al.click(al.exit_x, al.exit_y)
+            al.click(yes_x, yes_y)
+            savings += current_price - avg_price
+    except al.PictureError as pe:
+        print('Error : no numbers on the game trading screen')
+    finally:
+        al.click(al.exit_x, al.exit_y)
     return savings
 
 
@@ -90,40 +95,34 @@ def buy_cash(savings):
     al.click(amorian_basket_x, amorian_basket_y)
     al.click(ok_x, ok_y)
 
-    money = getMoney('meso')
+    money = getmoney('meso')
 
-    avg_price = gather_price('average')
+    avg_price = getprice('average')
 
     while money >= avg_price:
-        current_price = gather_price('current')
+        current_price = getprice('current')
         while current_price >= avg_price:
             al.click(no_x, no_y)
-            current_price = gather_price('current')
+            current_price = getprice('current')
             sleep(0.2)
         al.click(yes_x, yes_y)
         savings += (avg_price - current_price)
 
         al.click(ok_x, ok_y)
 
-        money = getMoney('meso')
+        money = getmoney('meso')
 
-        avg_price = gather_price('average')
+        avg_price = getprice('average')
         sleep(0.2)
 
     al.click(al.exit_x, al.exit_y)
 
 
-def buy_twc():
+def buy_buffs():
     al.click(al.cs_x, al.cs_y)
     al.click(etc_x, etc_y)
     al.click(ok_x, ok_y)
-    sleep(.1)
     al.click(cs_yes_x, cs_yes_y)
-    al.click(al.exit_x, al.exit_y)
-
-
-def buy_buffs():
-    al.click(al.cs_x, al.cs_y)
     al.click(npc_x, npc_y)
     al.click(item_selector_x, item_selector_y)
     al.click(onyx_apple_x, onyx_apple_y)
